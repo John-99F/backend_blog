@@ -48,7 +48,6 @@ def verificar_token(token: str = Depends(authToken)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         usuario = payload.get("sub")
-
         if usuario is None:
             raise HTTPException(status_code=401, detail="Token inválido o mal formado")
 
