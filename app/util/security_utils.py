@@ -44,7 +44,7 @@ def expires_times():
 
 
 # ----- OAuth2 (ruta correcta según tu controlador) -----
-authToken = OAuth2PasswordBearer(tokenUrl="/users/token")
+authToken = OAuth2PasswordBearer(tokenUrl="token")
 
 
 # ----- VERIFICAR TOKEN -----
