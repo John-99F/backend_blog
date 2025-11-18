@@ -1,3 +1,6 @@
 sqlalchemy
 FastAPI
 uvicorn
+argon2-cffi
+python-jose[cryptography]
+jwt

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.data.database import Base, engine
-
+from app.controller import user_controller, blogs_posts_controller
 
 app = FastAPI(
     title="Backend Blog IA",
@@ -11,6 +11,11 @@ app = FastAPI(
 
 #Crea la base de datos 
 Base.metadata.create_all(bind=engine)
+
+
+app.include_router(user_controller)
+app.include_router(blogs_posts_controller)
+
 
 if __name__ == "__main__":
     import uvicorn
