@@ -1,6 +1,8 @@
-sqlalchemy
-FastAPI
+fastapi
 uvicorn
+sqlalchemy
+psycopg2-binary
 argon2-cffi
 python-jose[cryptography]
-jwt
+python-dotenv
+google-generativeai
