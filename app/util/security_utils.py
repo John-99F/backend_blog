@@ -11,9 +11,9 @@ load_dotenv()
 
 passwordHasher = PasswordHasher()
 
-SECRET_KEY = ""
+SECRET_KEY = "12314"
 ALGORITHM = "HS256"
-TOKEN_EXPIRE_MINUTES = 30
+TOKEN_EXPIRE_MINUTES = 5
 
 
 # ----- HASH DE CONTRASEÑA -----
