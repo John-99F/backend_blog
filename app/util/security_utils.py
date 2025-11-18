@@ -4,15 +4,22 @@ from jose import JWTError, ExpiredSignatureError, jwt
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
 
 passwordHasher = PasswordHasher()
 
-SECRET_KEY = ""  # debes llenarlo con un valor seguro desde .env
+SECRET_KEY = ""
 ALGORITHM = "HS256"
-TOKEN_EXPIRE_MINUTES = 1
+TOKEN_EXPIRE_MINUTES = 30
 
+
+# ----- HASH DE CONTRASEÑA -----
 def get_password_hash(password: str) -> str:
     return passwordHasher.hash(password)
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
@@ -24,10 +31,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         return False
 
 
-# ----- JWT -----
+# ----- CREAR TOKEN -----
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -36,8 +43,8 @@ def expires_times():
     return timedelta(minutes=TOKEN_EXPIRE_MINUTES)
 
 
-# OAuth2 (token bearer)
-authToken = OAuth2PasswordBearer(tokenUrl="token")
+# ----- OAuth2 (ruta correcta según tu controlador) -----
+authToken = OAuth2PasswordBearer(tokenUrl="/users/token")
 
 
 # ----- VERIFICAR TOKEN -----
@@ -47,14 +54,15 @@ def verificar_token(token: str = Depends(authToken)):
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        usuario = payload.get("sub")
-        if usuario is None:
-            raise HTTPException(status_code=401, detail="Token inválido o mal formado")
+        user_id = payload.get("sub")
 
-        return usuario
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Token inválido: no contiene 'sub'")
+
+        return user_id
 
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado")
 
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token inválido")
+        raise HTTPException(status_code=401, detail="Token inválido o corrupto")

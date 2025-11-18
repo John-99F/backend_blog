@@ -6,30 +6,35 @@ from app.data.models.articles import Article
 import json
 
 
-def get_all_post(db:  Session = Depends(get_db)): 
+def get_all_post(db: Session = Depends(get_db)): 
     articles = db.query(Article).all()
-    db.close()
     return [a.to_dict() for a in articles]
 
 
-def generate_post(prompt,
-                  current_user,
-                  db: Session = Depends(get_db),):
+def generate_post(
+    prompt: str,
+    current_user: str,     # ID o email del usuario extraído del JWT
+    db: Session = Depends(get_db)
+):
 
-    # 1. Generar artículo con IA
+    # 1. Llamar API de IA
     result = generar_blog(prompt)
 
+    # 2. Validar JSON que devuelve Gemini
     try:
         json_data = json.loads(result)
-    except:
-        raise HTTPException(status_code=500, detail="La IA no devolvió un JSON válido")
+    except Exception:
+        raise HTTPException(
+            status_code=500, 
+            detail="La IA no devolvió un JSON válido"
+        )
 
-    # 2. Guardar en BD
+    # 3. Guardar artículo en BD
     post = Article(
-        title=json_data["title"],
-        description=json_data["description"],
-        imageurl=json_data["imageurl"],
-        author_id=current_user
+        title=json_data.get("title"),
+        description=json_data.get("description"),
+        imageurl=json_data.get("imageurl"),
+        author_id=current_user  # viene del token JWT
     )
 
     db.add(post)
