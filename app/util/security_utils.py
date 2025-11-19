@@ -1,11 +1,12 @@
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-from jose import JWTError, ExpiredSignatureError, jwt
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 from dotenv import load_dotenv
 
+import jwt
+from jwt import InvalidTokenError
 # Cargar variables de entorno
 load_dotenv()
 
@@ -56,12 +57,8 @@ def verificar_token(token: str = Depends(authToken)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("sub")
-
         if user_id is None:
             raise HTTPException(status_code=401, detail="Token inválido: no contiene 'sub'")
-
         return user_id
-    except ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expirado")
-    except JWTError:
+    except InvalidTokenError:
         raise HTTPException(status_code=401, detail="Token inválido o corrupto")
