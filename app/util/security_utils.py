@@ -45,11 +45,11 @@ def expires_times():
 
 
 # ----- OAuth2 (ruta correcta según tu controlador) -----
-authToken = OAuth2PasswordBearer(tokenUrl="https://backend-blog-snpc.onrender.com/users/token")
+authToken = OAuth2PasswordBearer(tokenUrl="/users/token")
 
 
 # ----- VERIFICAR TOKEN -----
-def verificar_token(token: str = Depends(authToken)):
+def verificar_token(token = Depends(authToken)):
     """
     Verifica el token JWT recibido en la cabecera Authorization.
     """
