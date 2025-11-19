@@ -49,6 +49,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     print("DEBUG TOKEN GENERADO:", token)
     return token
 
+def expires_times():
+    return timedelta(minutes=TOKEN_EXPIRE_MINUTES)
 
 # ----- OAuth2 -----
 authToken = OAuth2PasswordBearer(tokenUrl="/users/token")
