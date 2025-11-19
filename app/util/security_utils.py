@@ -51,14 +51,14 @@ authToken = OAuth2PasswordBearer(tokenUrl="/users/token")
 # ----- VERIFICAR TOKEN -----
 def verificar_token(token: str = Depends(authToken)):
     """
-    Verifica y decodifica el token enviado en Authorization: Bearer <token>
+    Verifica el token JWT recibido en la cabecera Authorization.
     """
     print(token)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id = payload.get("sub")
-        if user_id is None:
-            raise HTTPException(status_code=401, detail="Token inválido: no contiene 'sub'")
-        return user_id
+        usuario = payload.get("sub")
+        if usuario is None:
+            raise HTTPException(status_code=401, detail="Token inválido o expirado")
+        return usuario
     except InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Token inválido o corrupto")
+        raise HTTPException(status_code=401, detail="Token inválido o expirado")
