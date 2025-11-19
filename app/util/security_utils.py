@@ -11,7 +11,7 @@ load_dotenv()
 
 passwordHasher = PasswordHasher()
 
-SECRET_KEY = "12314"
+SECRET_KEY = ""
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_MINUTES = 5
 
@@ -52,6 +52,7 @@ def verificar_token(token: str = Depends(authToken)):
     """
     Verifica y decodifica el token enviado en Authorization: Bearer <token>
     """
+    print(token)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("sub")
@@ -60,9 +61,7 @@ def verificar_token(token: str = Depends(authToken)):
             raise HTTPException(status_code=401, detail="Token inválido: no contiene 'sub'")
 
         return user_id
-
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado")
-
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido o corrupto")
