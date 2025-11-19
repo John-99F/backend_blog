@@ -7,9 +7,12 @@ from app.data.database import get_db
 router = APIRouter(prefix="/blog", tags=["Blog"])
 
 
-# Obtener todos los posts
+# Obtener todos los posts (si quieres protegerlo, agrega token)
 @router.get("/posts")
-def get_posts(db: Session = Depends(get_db)):
+def get_posts(
+    current_user: str = Depends(verificar_token),  # <-- proteger si quieres
+    db: Session = Depends(get_db)
+):
     try:
         return get_all_post(db)
     except Exception as e:
@@ -19,8 +22,8 @@ def get_posts(db: Session = Depends(get_db)):
 # Generar un post usando IA (requiere token)
 @router.post("/generate-post")
 def create_post(
+    current_user: str = Depends(verificar_token),  # <-- PRIMERO
     prompt_data: dict = Body(...),
-    current_user: str = Depends(verificar_token),
     db: Session = Depends(get_db)
 ):
     try:
