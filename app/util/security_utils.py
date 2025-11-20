@@ -61,4 +61,4 @@ def verificar_token(token = Depends(authToken)):
             raise HTTPException(status_code=401, detail="Token inválido o expirado usuario vacioUus")
         return usuario
     except InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Token inválido o expirado")
+        raise HTTPException(status_code=401, detail="Token inválido o expirado :0")
