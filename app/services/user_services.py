@@ -45,7 +45,7 @@ def login(email, password, db: Session):
         )
 
     access_token = create_access_token(
-        data={"sub": user.id},
+        data={"sub": user},
         expires_delta=expires_times()
     )
 
