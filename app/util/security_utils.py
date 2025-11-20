@@ -35,7 +35,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # ----- CREAR TOKEN -----
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15 ))
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -58,7 +58,7 @@ def verificar_token(token = Depends(authToken)):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         usuario = payload.get("sub")
         if usuario is None:
-            raise HTTPException(status_code=401, detail="Token inválido o expirado")
+            raise HTTPException(status_code=401, detail="Token inválido o expirado usuario vacioUus")
         return usuario
     except InvalidTokenError:
         raise HTTPException(status_code=401, detail="Token inválido o expirado")
