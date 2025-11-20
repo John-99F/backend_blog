@@ -1,30 +1,40 @@
 import os
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Cargar variables .env en local
-load_dotenv()
-
-DATABASE_URL = os.getenv("DB_URL")
-
-if not DATABASE_URL:
-    raise Exception("DB_URL no está configurado en variables de entorno")
-
-# Render usa "postgres://" → SQLAlchemy requiere "postgresql://"
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True  # evita desconexiones cuando Render "duerme"
-)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
 
-# Obtener sesión en los endpoints
+# Detectar si estamos en producción (Render aplica DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    # PostgreSQL (Render)
+    SQLALCHEMY_DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
+
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        pool_pre_ping=True
+    )
+
+    print("🔵 Usando PostgreSQL (Render/Producción)")
+
+else:
+    # SQLite (Local)
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./blogDb.db"
+
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+
+    print("🟢 Usando SQLite (Local)")
+
+
+# Session
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+# Dependency
 def get_db():
     db = SessionLocal()
     try:
