@@ -1,7 +1,7 @@
+import os
 import google.generativeai as genai
 
-API_KEY = "AIzaSyDEpsitZNnt9mFJyLbtB7irS_yo1530Bu0"
-
+API_KEY = os.getenv("API_KEY")
 genai.configure(api_key=API_KEY)
 
 def generar_blog(prompt: str):
