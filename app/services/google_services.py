@@ -11,8 +11,8 @@ def generar_blog(prompt: str):
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
         real_prompt = (
-            f"Genera un artículo de blog basado en este prompt. "
-            f"Devuélvelo en formato JSON con: id, title, description, datecreation, imageurl. "
+            f"Genera un artículo de blog basado en este prompt."
+            f"Devuélvelo en formato JSON con: id, title, description, datecreation, imageurl. la description no debe ser tan larga "
             f"En 'imageurl' crea una imagen usando https://image.pollinations.ai/ "
             f"y devuelve solo la URL. Prompt original: {prompt}"
         )
