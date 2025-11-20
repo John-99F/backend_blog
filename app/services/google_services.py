@@ -14,10 +14,11 @@ def generar_blog(prompt: str):
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
 
-        instrucciones = (
-            "Genera un artículo de blog basado en el prompt del usuario.\n"
-            "Devuelve EXCLUSIVAMENTE un JSON válido. Sin explicaciones, sin texto extra, "
-            "sin backticks, sin markdown, sin ```json.\n\n"
+        # Instrucciones + prompt de usuario en un solo texto
+        real_prompt = (
+            "Genera un artículo de blog basado en este prompt del usuario.\n\n"
+            "DEVUELVE ÚNICAMENTE un JSON válido. NO incluyas texto adicional, "
+            "NO uses markdown, NO pongas ```json.\n\n"
             "Formato EXACTO:\n"
             "{\n"
             "  \"id\": \"string\",\n"
@@ -26,26 +27,20 @@ def generar_blog(prompt: str):
             "  \"datecreation\": \"YYYY-MM-DD\",\n"
             "  \"imageurl\": \"string\"\n"
             "}\n\n"
-            "IMPORTANTE:\n"
-            "- No incluyas nada fuera del JSON.\n"
-            "- 'imageurl' debe ser una URL válida generada con Pollinations.\n"
-            "- Usa el prompt original para generar la imagen.\n"
+            f"Prompt del usuario: {prompt}"
         )
 
-        response = model.generate_content([
-            {"role": "system", "content": instrucciones},
-            {"role": "user", "content": prompt}
-        ])
+        response = model.generate_content(real_prompt)
 
         raw = response.text.strip()
         print("IA RAW:", raw)
 
-        # Convertir respuesta a JSON
+        # Intentar parsear JSON
         data = json.loads(raw)
 
-        # Crear URL segura de pollinations
-        encoded_prompt = urllib.parse.quote(prompt)
-        data["imageurl"] = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
+        # Crear imagen Pollinations segura
+        encoded = urllib.parse.quote(prompt.strip())
+        data["imageurl"] = f"https://image.pollinations.ai/prompt/{encoded}"
 
         return data
 
