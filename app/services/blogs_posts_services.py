@@ -9,7 +9,6 @@ def get_all_post(db: Session):
     articles = db.query(Article).all()
     return [a.to_dict() for a in articles]
 
-
 def generate_post(prompt: str, current_user: str, db: Session):
 
     # 1. Generar contenido con IA
