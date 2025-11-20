@@ -10,7 +10,6 @@ router = APIRouter(prefix="/blog", tags=["Blog"])
 # Obtener todos los posts (si quieres protegerlo, agrega token)
 @router.get("/posts")
 def get_posts(
-    current_user: str = Depends(verificar_token),  # <-- proteger si quieres
     db: Session = Depends(get_db)
 ):
     try:
