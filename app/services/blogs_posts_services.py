@@ -17,10 +17,10 @@ def generate_post(prompt: str, current_user: str, db: Session):
     # 2. Validar JSON
     try:
         json_data = json.loads(result)
-    except Exception:
+    except Exception as e :
         raise HTTPException(
             status_code=500,
-            detail="La IA no devolvió un JSON válido"
+            detail=f"La IA no devolvió un JSON válido {e}"
         )
 
     # 3. Crear artículo
