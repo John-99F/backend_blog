@@ -14,7 +14,7 @@ def generate_post(prompt: str, current_user: str, db: Session):
 
     # 1. Generar contenido con IA
     result = generar_blog(prompt)
-
+    print(f"json: {result}")
     # 2. Validar JSON
     try:
         json_data = json.loads(result)
