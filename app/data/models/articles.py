@@ -9,7 +9,7 @@ class Article(Base):
     id = Column(String, primary_key=True)
     title =  Column(String(200))
     description = Column(String(200))
-    autor_id = Column(Integer)
+    autor_id = Column(String(200))
     date_creation = Column(String(120))
     image_url = Column(String(120))
 
