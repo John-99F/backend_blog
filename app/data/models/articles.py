@@ -6,7 +6,7 @@ class Article(Base):
     __tablename__ = "Article"
 
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     title =  Column(String(200))
     description = Column(String(200))
     autor_id = Column(Integer)
