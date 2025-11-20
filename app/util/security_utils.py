@@ -12,7 +12,7 @@ load_dotenv()
 
 passwordHasher = PasswordHasher()
 
-SECRET_KEY = ""
+SECRET_KEY = "12345"
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_MINUTES = 5
 
