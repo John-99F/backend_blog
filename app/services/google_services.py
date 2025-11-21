@@ -23,7 +23,7 @@ def generar_blog(prompt: str):
             "{\n"
             "  \"id\": \"string\",\n"
             "  \"title\": \"string\",\n"
-            "  \"description\": \"string corta (máximo 2–3 líneas)\",\n"
+            "  \"description\": \"string corta (máximo 2–3 líneas que no supere las 150 caracteres)\",\n"
             "  \"datecreation\": \"YYYY-MM-DD\",\n"
             "  \"imageurl\": \"string\"\n"
             "}\n\n"
