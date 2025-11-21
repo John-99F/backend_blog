@@ -2,6 +2,9 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+# IMPORTAR TU MODELO
+from app.data.models.articles import Article  # 👈 IMPORTANTE
+
 Base = declarative_base()
 
 # Detectar si estamos en producción (Render aplica DATABASE_URL)
@@ -41,3 +44,20 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+
+# 🚨 NUEVO: Función para eliminar y recrear la tabla Article
+def recreate_article_table():
+    print("⚠ Eliminando tabla Article si existe...")
+    Article.__table__.drop(engine, checkfirst=True)
+
+    print("🛠 Creando tabla Article...")
+    Article.__table__.create(engine)
+
+    print("✅ Tabla Article recreada correctamente.")
+
+
+# Ejecutar directamente desde Python
+if __name__ == "__main__":
+    recreate_article_table()
